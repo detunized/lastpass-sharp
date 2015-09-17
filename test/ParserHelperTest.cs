@@ -20,7 +20,10 @@ namespace LastPass.Test
                 var accounts = ParserHelper.ExtractChunks(reader).Where(i => i.Id == "ACCT").ToArray();
                 for (var i = 0; i < accounts.Length; ++i)
                 {
-                    var account = ParserHelper.Parse_ACCT(accounts[i], TestData.EncryptionKey);
+                    var entry = ParserHelper.Parse_ACCT(accounts[i], TestData.EncryptionKey);
+
+                    Assert.IsInstanceOf<Account>(entry);
+                    var account = (Account)entry;
                     Assert.True(account.Url.StartsWith(TestData.Accounts[i].Url));
                 }
             });

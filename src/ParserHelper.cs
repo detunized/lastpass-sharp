@@ -29,7 +29,7 @@ namespace LastPass
         //
         // TODO: Add a test for the folder case!
         // TODO: Add a test case that covers secure note account!
-        public static Account Parse_ACCT(Chunk chunk, byte[] encryptionKey, SharedFolder folder = null)
+        public static IEntry Parse_ACCT(Chunk chunk, byte[] encryptionKey, SharedFolder folder = null)
         {
             Debug.Assert(chunk.Id == "ACCT");
 
@@ -53,9 +53,11 @@ namespace LastPass
                     var type = "";
                     ParseSecureNoteServer(notes, ref type, ref url, ref username, ref password);
 
+                    if (string.IsNullOrEmpty(type))
+                        return new GenericNote(id, name, notes);
                     // Only the some secure notes contain account-like information
                     if (!AllowedSecureNoteTypes.Contains(type))
-                        return null;
+                        return (IEntry)null;
                 }
 
                 // Override the group name with the shared folder name if any.

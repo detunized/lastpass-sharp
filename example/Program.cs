@@ -59,20 +59,34 @@ namespace Example
             }
 
             // Dump all the accounts
-            for (var i = 0; i < vault.Accounts.Length; ++i)
+            for (var i = 0; i < vault.Entries.Length; ++i)
             {
-                var account = vault.Accounts[i];
+                var entry = vault.Entries[i];
 
-                // Need explicit converstion to string.
-                // String.Format doesn't do that for EncryptedString.
-                Console.WriteLine("{0}: {1} {2} {3} {4} {5} {6}",
-                                  i + 1,
-                                  account.Id,
-                                  (string)account.Name,
-                                  (string)account.Username,
-                                  (string)account.Password,
-                                  account.Url,
-                                  (string)account.Group);
+                var account = entry as Account;
+                if (account != null)
+                {
+                    // Need explicit converstion to string.
+                    // String.Format doesn't do that for EncryptedString.
+                    Console.WriteLine("{0}: {1} {2} {3} {4} {5} {6}",
+                                      i + 1,
+                                      account.Id,
+                                      (string)account.Name,
+                                      (string)account.Username,
+                                      (string)account.Password,
+                                      account.Url,
+                                      (string)account.Group);
+                }
+
+                var genericNote = entry as GenericNote;
+                if (genericNote != null)
+                {
+                    Console.WriteLine("{0}: {1} {2} {3}",
+                                      i + 1,
+                                      genericNote.Id,
+                                      (string)genericNote.Name,
+                                      genericNote.Contents);
+                }
             }
         }
     }

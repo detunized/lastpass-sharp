@@ -5,7 +5,7 @@ using System;
 
 namespace LastPass
 {
-    public class Account
+    public class Account : IEntry
     {
         public Account(string id, string name, string username, string password, string url, string group)
         {

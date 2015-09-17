@@ -37,9 +37,9 @@ namespace LastPass.Test
         public void Create_returns_vault_with_correct_accounts()
         {
             var vault = Vault.Create(new Blob(TestData.Blob, 1), username: "", password: "");
-            Assert.AreEqual(TestData.Accounts.Length, vault.Accounts.Length);
-            Assert.AreEqual(TestData.Accounts.Select(i => i.Id), vault.Accounts.Select(i => i.Id));
-            Assert.AreEqual(TestData.Accounts.Select(i => i.Url), vault.Accounts.Select(i => i.Url));
+            Assert.AreEqual(TestData.Accounts.Length, vault.Entries.Length);
+            Assert.AreEqual(TestData.Accounts.Select(i => i.Id), vault.Entries.Select(i => i.Id));
+            Assert.AreEqual(TestData.Accounts.Select(i => i.Url), vault.Entries.OfType<Account>().Select(i => i.Url));
         }
     }
 }

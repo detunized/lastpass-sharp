@@ -34,7 +34,7 @@ namespace LastPass
                 if (!IsComplete(chunks))
                     throw new ParseException(ParseException.FailureReason.CorruptedBlob, "Blob is truncated");
 
-                Accounts = ParseAccounts(chunks, encryptionKey);
+                Entries = ParseAccounts(chunks, encryptionKey);
             });
         }
 
@@ -43,9 +43,9 @@ namespace LastPass
             return chunks.Count > 0 && chunks.Last().Id == "ENDM" && chunks.Last().Payload.SequenceEqual("OK".ToBytes());
         }
 
-        private Account[] ParseAccounts(List<ParserHelper.Chunk> chunks, byte[] encryptionKey)
+        private IEntry[] ParseAccounts(List<ParserHelper.Chunk> chunks, byte[] encryptionKey)
         {
-            var accounts = new List<Account>(chunks.Count(i => i.Id == "ACCT"));
+            var entries = new List<IEntry>(chunks.Count(i => i.Id == "ACCT"));
             SharedFolder folder = null;
             var rsaKey = new RSAParameters();
 
@@ -58,7 +58,7 @@ namespace LastPass
                                                               folder == null ? encryptionKey : folder.EncryptionKey,
                                                               folder);
                         if (account != null)
-                            accounts.Add(account);
+                            entries.Add(account);
                         break;
                     case "PRIK":
                         rsaKey = ParserHelper.Parse_PRIK(i, encryptionKey);
@@ -69,9 +69,9 @@ namespace LastPass
                 }
             }
 
-            return accounts.ToArray();
+            return entries.ToArray();
         }
 
-        public Account[] Accounts { get; private set; }
+        public IEntry[] Entries { get; private set; }
     }
 }
